@@ -1,0 +1,85 @@
+	html,body{
+
+		height: 100%;
+	}
+
+	body{
+		padding-top:  60px;
+	}
+	body#profile img#profile-image{
+
+		-webkit-box-shadow: 0px 0px 43px 0px rgba(0,0,0,0.75);
+		-moz-box-shadow: 0px 0px 43px 0px rgba(0,0,0,0.75);
+		box-shadow: 0px 0px 43px 0px rgba(0,0,0,0.75);
+	}
+	#side{
+		float: right;
+	}
+	.huge{
+		font-size:40px;
+	}
+	
+	.tag1{
+		border: 1px solid #2FA4E7;
+		color:#2FA4E7;
+	}
+
+	.tag1 a{
+			color:#2FA4E7;
+	}
+	.tag2{
+		border: 1px solid #d9534f;
+		color: red;
+			
+	}
+	.tag2 a{
+		color: red;
+	}
+
+
+	.tag3{
+		border: 1px solid #f0ad4e;
+		color: orange;
+			
+	}
+	.tag3 a{
+		color: orange;
+	}
+
+	.tag4{
+		border: 1px solid #5cb85c;
+		color: green;
+			
+	}
+	.tag4 a{
+		color: green;
+	}
+	#wrapper{
+		min-height: 100%;
+		position: relative;
+	}
+	.body{
+		padding: 70px;
+	}
+	.ratan{
+		padding-bottom: 70px;
+	}
+	footer{
+		background: #2FA4E7;
+		color: white;
+		height: 50px;
+		line-height: 50px;
+		font-size:12px ; 
+		position:absolute;
+		bottom: 0;
+		width: 100%;
+	}
+	footer a{
+		color: white;
+		font-weight: bold;
+
+	}
+	footer a:hover{
+		color: white;
+		text-decoration: underline;
+	}
