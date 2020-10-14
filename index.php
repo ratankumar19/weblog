@@ -11,16 +11,16 @@ $page_id=1;
 }
 
 if(isset($_GET['cat'])){
-
 $cat_id=$_GET['cat'];
 $cat_query="SELECT * FROM categories WHERE id='$cat_id'";
 $cat_run=mysqli_query($con,$cat_query);
 $cat_row=mysqli_fetch_array($cat_run);
 $cat_name=$cat_row['category'];
 }
-
+//search button is cliked and it will give the result according the tag name value
+//ex- india is your tag name then i,in,ind,indi,india result the same post but indian will reult diffrent post...
 if(isset($_POST['search'])){
-$search=$_POST['search-title'];
+$search=$_POST['search-title'];//serach title value is taken from db in search var
 $all_posts_query="SELECT * FROM posts WHERE status='publish'";
 $all_posts_query.="and tags LIKE '%search%'";
 $all_posts_run=mysqli_query($con,$all_posts_query);
@@ -48,7 +48,7 @@ $posts_start_from=($page_id-1)*$number_of_posts;
 <div class="jumbotron">
       <div class="container">
             <div id="details" class="animated fadeInLeft">
-                  <h1 class="animate__animated animate__swing">Ratan Singh<span>  Blog</span></h1>
+                  <h1 class="animate__animated animate__backInLeft">Ratan Singh<span>  Blog</span></h1>
                     <p>This is my first Blog</p>
 
             </div>
@@ -191,7 +191,7 @@ $posts_start_from=($page_id-1)*$number_of_posts;
                   <p>Written by:<span><?php echo ucfirst($author); ?></span></p>
             </div>
             <div class="col-md-2 profile-picture">
-                  <img src="img/<?php echo $author_image;?>" alt="Profile Picture" class="img-circle">
+                  <img src="img/<?php echo $author_image;?>" alt="Profile Picture" class="rounded-circle img-thumbnail">
             </div>
       </div>
       <div class="item">
@@ -217,6 +217,7 @@ $posts_start_from=($page_id-1)*$number_of_posts;
             <nav aria-label="Page navigation example">
                     <ul class="pagination justify-content-center">
                           <?php
+                          //pagination concept
                           for($i=1;$i<=$total_pages;$i++)
                             {
                               echo " <li class='".($page_id==$i ?'active':' ')."'><a class='page-link' href='index.php?page=".$i."&".(isset($cat_name)?"cat=$cat_id":"")."'>$i</a></li>";    
@@ -232,6 +233,4 @@ $posts_start_from=($page_id-1)*$number_of_posts;
     </div>
 </div>
 </section>
-<?php require_once('inc2/footer.php');?>    
-    
-     
+<?php require_once('inc2/footer.php');?>   

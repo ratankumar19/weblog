@@ -1,3 +1,5 @@
+
+ 
 	body{
 	font-family: 'Oswald', sans-serif;
 	}
@@ -162,7 +164,7 @@
 
 
 	.mojFooter{
-    background-color: #f8f8f8;
+    background-color: black;
     color: #00a651;
     padding-top: 0px;
     border-top: 1px solid #e7e7e7;
@@ -390,4 +392,3 @@ h
 
 
 
-}

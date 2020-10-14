@@ -3,9 +3,12 @@ session_start();
 if(!isset($_SESSION['username'])){
  header("Location:login.php");}
   elseif (isset($_SESSION['username']) && $_SESSION['role']=='author'){
+    //if author comes in this page then ot will directed to index page directly
   header("Location:index.php");
 }
 //edit id jb url me jayega to usse query chla ke db se value fetch krr lenge...
+//as we clicked the edit option from user page ,then take that user id and fetch all data of that id and display the edit page
+//these all data come from previous page (without updating )
 if(isset($_GET['edit'])){
 $edit_id=$_GET['edit'];
 $edit_query="SELECT * FROM users WHERE id = $edit_id";
@@ -17,7 +20,7 @@ if(mysqli_num_rows($edit_query_run) >0){
   $e_role=$edit_row['role'];
   $e_image=$edit_row['image'];
   $e_details=$edit_row['details'];
-//echo $e_first_name;
+
 }else{
 header("Location:index.php");
 }
@@ -36,17 +39,18 @@ header("Location:index.php");
                             <div class="col-md-9">
                                 <h1>
                                       <i class="fa fa-user" aria-hidden="true"></i> 
-                                      Edit User <small>Edit User Details</small>
+
+                                      <strong>Edit User </strong>
                                 </h1>
                                 <ol class="breadcrumb">
-                                  <li><a href=""><i class="fa fa-tachometer" aria-hidden="true"></i> Dashboard </a></li>
+                                  <li><a href="">Edit User Details </a></li>
                                 </ol>
 
               <?php
                       if(isset($_POST['submit'])){
 
-                      // $date=getdate($row['date']);
-              //$date=date();
+                     //mysqli_real_escape_string helps to  Escapes special characters in a string 
+              
                         $first_name=mysqli_real_escape_string($con,$_POST['first_name']);
                         $last_name=mysqli_real_escape_string($con,$_POST['last_name']); 
                         $password=mysqli_real_escape_string($con,$_POST['password']);
@@ -55,9 +59,10 @@ header("Location:index.php");
                         $image_tmp=$_FILES['image']['tmp_name'];
                         $details=mysqli_real_escape_string($con,$_POST['details']);
                         if(empty($image)){
+                          //if image has not updated then simply display the previous image 
                           $image=$e_image;
                         }
-                      $salt_query="SELECT * from users order by id desc limit 1";
+                      $salt_query="SELECT * from users order by id desc limit 1";//select the latest one for crypting password
                       $salt_run=mysqli_query($con,$salt_query);
                       $salt_row=mysqli_fetch_array($salt_run);
                       $salt=$salt_row['salt'];
@@ -74,10 +79,10 @@ header("Location:index.php");
                       $update_query .=" WHERE `users`.`id` = $edit_id";
                       if(mysqli_query($con,$update_query)){
                         $msg="users has been updated";
-                        //for refreshing page
+                        //for refreshing page and reloading on the same page
                         header("refresh:1;url=edit-user.php?edit=$edit_id");
                       }else{
-                        $error="users has not been updated"; 
+                        $error="Users has not been updated"; 
                       }
                      }
                     }

@@ -9,13 +9,14 @@ elseif (isset($_SESSION['username']) && $_SESSION['role']=='author'){
 
 if(isset($_GET['edit']))
 {
+  //this edit id helps to access that categories jisme mai edit clicked kiya hu and wo cat ko update wale col me print krega 
 $edit_id=$_GET['edit'];
 }
-if(isset($_GET['del']))
+if(isset($_GET['del']))//for deleting
 {
 $del_id=$_GET['del'];
 //for avoiding deletion through query in url
-if(isset($_SESSION['username']) && $_SESSION['role']=='admin'){
+if(isset($_SESSION['username']) && $_SESSION['role']=='admin'){//only admin can delete the categories
 $del_query="DELETE FROM categories WHERE id ='$del_id'";
 if(mysqli_query($con,$del_query)){
 $del_msg="Category has been Deleted";
@@ -25,6 +26,7 @@ else{
 }
 }
 }
+//Adding categories
 if(isset($_POST['submit'])){
 $cat_name=mysqli_real_escape_string($con,strtolower($_POST['cat-name']));
 if(empty($cat_name))//for avoiding adding of empty categories
@@ -32,20 +34,21 @@ if(empty($cat_name))//for avoiding adding of empty categories
 $error="Must fill this field";
 }
 else{
-$check_query="SELECT * FROM categories  WHERE category='$cat_name'";
+$check_query="SELECT * FROM categories  WHERE category='$cat_name'";//check that categories is alredy exist or not?
 $check_run=mysqli_query($con,$check_query);
 if(mysqli_num_rows($check_run)>0){
 $error="Category is already exist";
 }else{
-$insert_query="INSERT INTO categories (category) VALUES ('$cat_name')";
+$insert_query="INSERT INTO categories (category) VALUES ('$cat_name')";//insert the categories
 if(mysqli_query($con,$insert_query)){
 $msg="category has been added";
 }else{
-  $error="category has been added";
+  $error="category has not been added";
 }
 }
 }
 }
+//update category(same as adding categories)
 if(isset($_POST['update'])){
 $cat_name=mysqli_real_escape_string($con,strtolower($_POST['cat-name']));
 if(empty($cat_name))//for avoiding adding of empty categories
@@ -54,17 +57,19 @@ $up_error="Must fill this field";
 }
 else{
 $check_query="SELECT * FROM categories  WHERE category='$cat_name'";
+//agr update bina koi chnages ke kr rhe ho to wo cat alredy exist hi hoga
 $check_run=mysqli_query($con,$check_query);
 if(mysqli_num_rows($check_run)>0){
 $up_error="Category is already exist";
 }
 else{ 
-$update_query="UPDATE `categories` SET `category` = '$cat-name' WHERE `categories`.`id` = $edit_id;";
+  //update category
+$update_query="UPDATE `categories` SET `category` = '$cat_name' WHERE `categories`.`id` = $edit_id;";
 if(mysqli_query($con,$update_query)){
-$up_msg="category has been added";
+$up_msg="category has been updated ";
 }
 else{
-  $up_error="category has been added";
+  $up_error="category has not been updated";
 }
 }
 }
@@ -79,14 +84,14 @@ else{
                  <?php require_once('inc/sidebar.php');?>
                      <div class="col-md-9">
                         <h1>
-                            <i class="fa fa-tachometer" aria-hidden="true"></i>  
-                            Categories <small>Diffrent Categories</small>
+                            <i class="fa fa-tachometer animate__animated animate__backInRight" aria-hidden="true"></i>  
+                            <srong>Categories </srong>
                         </h1>
                         <br>
                         <ol class="breadcrumb">
                           <li> 
-                              <a href="index.php"><i class="fa fa-tachometer" aria-hidden="true"></i>
-                                   Dashboard 
+                              <a href="">
+                                   Diffrent Categories
                               </a>
                           </li>
                         </ol>
@@ -109,6 +114,7 @@ else{
                                 </form>
                                 <?php
                                 if(isset($_GET['edit'])){
+                                  //usi edit ko use kr ke uske cat ka value fetch kreega and display krega update wale section me 
                                   $edit_check_query="SELECT * FROM categories WHERE id=$edit_id";
                                   $edit_check_run=mysqli_query($con,$edit_check_query);
                                   if(mysqli_num_rows($edit_check_run)>0){
@@ -138,6 +144,7 @@ else{
                    </div>
                   <div class="col-md-6">
                     <?php 
+                      //select query for displaying all the categories 
                     $get_query="SELECT * FROM categories ORDER BY ID DESC";
                     $get_run=mysqli_query($con,$get_query);
                     if(mysqli_num_rows($get_run)>0){
@@ -159,6 +166,7 @@ else{
                       </thead>
                     <tbody>
                      <?php 
+                     //displaying the categories
                       while($get_row=mysqli_fetch_array($get_run)){
                         $category_id=$get_row['id'];
                         $category_name=$get_row['category'];
@@ -184,7 +192,7 @@ else{
         </div>  
       </div>
     </div>
-?php require_once('inc/footer.php');?>
+<?php require_once('inc/footer.php');?>
 
 
 

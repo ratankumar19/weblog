@@ -1,6 +1,6 @@
 
 <footer>
-  <div class="container text-center">
+  <div class="container text-center " style="width: 100%">
       Copyright &copy; by <a href="">Ratan Singh</a>.
       All Right Reserved from 2017-<?php echo date('Y');?> 
    </div>
@@ -20,7 +20,6 @@
   <script src="js/code.js"></script>
    
 <script>
-      
 
 tinymce.init({
   selector: 'textarea#textarea',
@@ -32,6 +31,7 @@ tinymce.init({
   ],
 
 <?php
+//for edit or insert image that img will be come from all  media
   $media_query="SELECT * FROM media  ORDER BY id DESC";
   $media_run=mysqli_query($con,$media_query);
   if(mysqli_num_rows($media_run) >0){
@@ -43,6 +43,7 @@ image_list: [
 
 
  <?php 
+ //mysqli_fetch_array — Fetch a result row as an associative, a numeric array, or both
   while($media_row=mysqli_fetch_array($media_run)){
     $media_name=$media_row['image'];
   
@@ -52,6 +53,8 @@ image_list: [
  <?php }?>
    ],
    <?php }?>
+
+
 
   toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
   content_css: '//www.tiny.cloud/css/codepen.min.css'

@@ -1,7 +1,7 @@
  <div class="widgets">
       <form action="index.php" method="post">
             <div class="input-group">
-                  <input type="text" class="form-control" name="search-title" placeholder="Search for...">
+                  <input type="text" class="form-control" name="search-title" placeholder="Search by Tag...">
                   <span class="input-group-btn">
                         <input type="submit" name="search" value="Go!" class="btn btn-default">
                   </span>
@@ -15,23 +15,23 @@
               
 
                  <?php
-         $p_query="SELECT * FROM posts where status='publish' ORDER BY views DESC LIMIT 5";
+              $p_query="SELECT * FROM posts where status='publish' ORDER BY views DESC LIMIT 5";
               $p_run=mysqli_query($con,$p_query);
               if(mysqli_num_rows($p_run)>0){
                   while($p_row=mysqli_fetch_array($p_run)){
                       $p_id=$p_row['id'];
                       //$p_date=getdate($p_row['date']);
-                      $date=getdate(strtotime($row['date']));
+                      //which is used to convert an English textual date-time description to a UNIX timestamp
+                      //1525564800 to 2018-05-06 or 15 Jun 2020
+                      $p_date=getdate(strtotime($p_row['date']));
 
                       $p_day=$p_date['mday'];
-                       $p_month=$p_date['month'];
-                        $p_year=$p_date['year'];
+                      $p_month=$p_date['month'];
+                      $p_year=$p_date['year'];
                       $p_title=$p_row['title'];
                       $p_image=$p_row['image'];
-                  
-
-              ?>
-<hr>
+                       ?>
+                    <hr>
               
 
                <div class="row">
@@ -41,7 +41,7 @@
                     <div class="col-8">
                           <a href="post.php?post_id=<?php echo $p_id;?>"><h6 ><?php echo $p_title;?></h6></a>
                           <p>     <i class="fa fa-clock-o" aria-hidden="true"></i>
-                                  <?php echo "$day $month $year";?>
+                                  <?php echo "$p_day $p_month $p_year";?>
                            </p>
                     </div>
                </div>
@@ -80,13 +80,13 @@
               if(mysqli_num_rows($p_run)>0){
                   while($p_row=mysqli_fetch_array($p_run)){
                       $p_id=$p_row['id'];
-                      $p_date=getdate($p_row['date']);
+                    $p_date=getdate(strtotime($p_row['date']));
+
                       $p_day=$p_date['mday'];
-                       $p_month=$p_date['month'];
-                        $p_year=$p_date['year'];
+                      $p_month=$p_date['month'];
+                      $p_year=$p_date['year'];
                       $p_title=$p_row['title'];
                       $p_image=$p_row['image'];
-                  
 
               ?>
               <hr>
@@ -125,6 +125,7 @@
         <div class="col-6">
           <ul>
            <?php
+
            $c_query="SELECT * FROM categories";
            $c_run=mysqli_query($con,$c_query);
            if(mysqli_num_rows($c_run)>0)
@@ -136,7 +137,7 @@
               $c_id=$c_row['id'];
                $c_category=$c_row['category'];
                $count=$count+1;
-               if(($count%2)==1)
+               if(($count%2)==1)//odd serail number wala category left side me ayega 
                {
         echo "<li><a href='index.php?cat=".$id."'>".(ucfirst($c_category))."</a></li>";
             }
@@ -163,8 +164,9 @@
               $c_id=$c_row['id'];
                $c_category=$c_row['category'];
                $count=$count+1;
-               if(($count%2)==0)
+               if(($count%2)==0)//even serail number wala category left side me ayega 
                {
+                //isme cat id pass krwya ja rha hai and usko php me isset me cach kiya jayega
         echo "<li><a href='index.php?cat=".$id."'>".(ucfirst($c_category))."</a></li>";
             }
           }

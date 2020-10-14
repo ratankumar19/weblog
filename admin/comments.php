@@ -4,9 +4,11 @@ if(!isset($_SESSION['username'])){
  header("Location:login.php");
 }elseif (isset($_SESSION['username']) && $_SESSION['role']=='author'){
   header("Location:index.php");
+
 }
 //for taking all data on comments page
 $session_username=$_SESSION['username'];
+//query for delete...
 if(isset($_GET['del'])){
 $del_id=$_GET['del'];
 $del_check_query="SELECT * FROM comments WHERE id =$del_id";
@@ -14,7 +16,7 @@ $del_check_run=mysqli_query($con,$del_check_query);
 if(mysqli_num_rows($del_check_run)> 0)
 {     
 $del_query="DELETE FROM `comments` WHERE `comments`.`id` = $del_id";
-if (isset($_SESSION['username']) && $_SESSION['role']=='admin'){
+if (isset($_SESSION['username']) && $_SESSION['role']=='admin'){//only admin can delete and reply on commnets ..
 if(mysqli_query($con,$del_query)){
 $msg="Comments has been Deleted";
 }
@@ -27,7 +29,7 @@ else{
 header("Location:index.php");
 }
 }
-if(isset($_GET['approve'])){
+if(isset($_GET['approve'])){//approve query
 $approve_id=$_GET['approve'];
 $approve_check_query="SELECT * FROM comments WHERE id =$approve_id";
 $approve_check_run=mysqli_query($con,$approve_check_query);
@@ -47,7 +49,7 @@ else
   header("Location:index.php");
 }
 }
-if(isset($_GET['unapprove'])){
+if(isset($_GET['unapprove'])){//unapprove query
 $unapprove_id=$_GET['unapprove'];
 $unapprove_check_query="SELECT * FROM comments WHERE id =$unapprove_id";
 $unapprove_check_run=mysqli_query($con,$unapprove_check_query);
@@ -65,6 +67,7 @@ else{
   header("Location:index.php");
   }
 }
+
 if(isset($_POST['checkboxes'])){
 foreach($_POST['checkboxes'] as $user_id){
 $bulk_option=$_POST['bulk-options'];
@@ -84,6 +87,7 @@ mysqli_query($con,$bulk_admin_query);
 }
 ?>
 <body>
+
   <div id="wrapper">
      <?php require_once('inc/header.php');?>
         <div class="container-fluid body">
@@ -91,15 +95,14 @@ mysqli_query($con,$bulk_admin_query);
                 <?php require_once('inc/sidebar.php');?>
                     <div class="col-md-9">
                         <h1>
-                            <i class="fa fa-comments" aria-hidden="true"></i>
-                             Comments <small>View All Comments </small>
+                            <i class="fa fa-comments animate__animated animate__backInRight" aria-hidden="true"></i>
+                             <strong>Comments</strong> <small> </small>
                         </h1>
                         <ol class="breadcrumb">
                           <li>
                               <a href="">
-                                  <i class="fa fa-tachometer" aria-hidden="true"></i> Dashboard </li>
-                                  <li class="active"> <i class="fa fa-user" aria-hidden="true"></i> Users</li>
-                              </a>
+                                   View All Comments 
+                                   </a>
                         </ol>
                     <?php
                     if(isset($_GET['reply'])){
@@ -125,6 +128,7 @@ mysqli_query($con,$bulk_admin_query);
                     $insert_comment_query="INSERT INTO `comments` (`id`, `date`, `name`, `username`, `post_id`, `email`, `website`, `image`, `comment`, `status`) VALUES (NULL, CURRENT_TIMESTAMP, '$full_name', '$session_username', '$reply_id', '$email', '', '$image', '$comment_data', 'approve');";
                     if(mysqli_query($con,$insert_comment_query)){
                       $comment_msg="Comments has been submitted";
+                      header('location:comments.php');//after submitting the comments ,commment box has ommited...
                     }
                     else{
                       $comment_error="Comments has  not been submitted";
@@ -167,14 +171,17 @@ if(mysqli_num_rows($run)> 0){
                   <div class="col-4">
                     <div class="form-group">
                       <select name="bulk-options" id="selectallboxes" class="form-control">
-                          <option value="delete">Delete</option>
+                         
                           <option value="approve">Approve</option>
                           <option value="pending">Unapprove</option>
+                           <option value="delete">Delete</option>
                       </select>
                     </div>
                  </div>
               <div class="col-8">
-            <input type="submit" class="btn btn-success" value="Apply">
+            <input type="submit" class="btn btn-success " value="Apply">
+              <input type="submit" class="btn btn-success  pull-right"value="Apply On All" onclick='selectAll()'>
+             
           </div>
       </div>
     </div>
@@ -190,7 +197,7 @@ else if(isset($msg)){
   <table class="table table-hover table-bordered striped">
       <thead>
           <tr>
-                <th> <input type="checkbox"  id="selectallboxes"></th>
+                <th><input type="checkbox"/></th>
                 <th >Sr #</th>
                 <th>Date</th>
                 <th>Username</th>
@@ -250,7 +257,7 @@ else if(isset($msg)){
  <?php
   }
    else{
-       echo "<center><h2>No Users Availbale</h2></center>";
+       echo "<center><h2>No Comments Availbale</h2></center>";
       }
   ?>
          </form>

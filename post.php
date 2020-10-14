@@ -4,6 +4,7 @@
     <?php require_once('inc2/header.php'); 
 if(isset($_GET['post_id'])){
 $post_id=$_GET['post_id'];
+//increment count of views 
 $views_query="UPDATE posts SET views = views + 1 WHERE id = $post_id";
 mysqli_query($con,$views_query);
 $query="SELECT * FROM posts WHERE status='publish' and id=$post_id";
@@ -11,7 +12,7 @@ $run=mysqli_query($con,$query);
 if(mysqli_num_rows($run)>0){
 $row=mysqli_fetch_array($run);
 $id=$row['id'];
-   // $date=getdate($row['date']);
+// $date=getdate($row['date']);
 $date=getdate(strtotime($row['date']));
 $day=$date['mday'];
 $month=$date['month'];
@@ -33,8 +34,8 @@ $post_data=$row['post_data'];
 
 <div class="jumbotron">
     <div class="container">
-          <div id="details" class="animated fadeInLeft">>
-              <h1 class="animate__animated animate__swing">Custom<span>  Posts</span></h1>
+          <div id="details">
+              <h1 class="animate__animated animate__backInLeft">Custom<span>  Posts</span></h1>
               <p>Here you can put your own tag line to make it more attractive</p>
           </div>
     </div>
@@ -58,7 +59,7 @@ $post_data=$row['post_data'];
                           </div>
 
                            <div class="col-md-2 profile-picture">
-                              <img src="img/<?php echo $author_image;?>" alt="Profile Picture" class="img-circle">
+                              <img src="img/<?php echo $author_image;?>" alt="Profile Picture" class="rounded-circle img-thumbnail">
                            </div>
                      </div>
            <a href="img/<?php echo $image;?>"><img src="img/<?php echo $image;?>"alt="Post Image"></a>
@@ -76,7 +77,7 @@ $post_data=$row['post_data'];
                 </span>
 
                 <span class="second"><i class="fa fa-comment" aria-hidden="true"></i>
-                    <a href="#">  Comment</a>
+                    <a href="#comment-section">Comment</a>
                 </span>
             </div>
       </div>
@@ -86,7 +87,8 @@ $post_data=$row['post_data'];
        <hr>
           <div class="row">
            <?php 
-            $r_query="SELECT * FROM posts WHERE status='publish' and title like '%title%' limit 3";
+            $r_query="SELECT * FROM posts WHERE status='publish' and title like '%$title%' limit 3";
+            //only 3 post will be show
             $r_run=mysqli_query($con,$r_query);
             while($r_row=mysqli_fetch_array($r_run)){
               $r_id=$r_row['id'];
@@ -100,6 +102,7 @@ $post_data=$row['post_data'];
                         <h4><?php echo $r_title;?></h4>
                   </a>
             </div>
+            <hr>
       <?php }?>
        
   </div>
@@ -108,10 +111,10 @@ $post_data=$row['post_data'];
 
 <div class="author">
       <div class="row">
-            <div class="col-sm-3">
-                 <img src="img/<?php echo $author_image;?>" alt="Profile Picture" class="img-circle">
+            <div class="col-3">
+                 <img src="img/<?php echo $author_image;?>" alt="Profile Picture" class="rounded-circle img-thumbnail">
               </div>
-            <div class="col-sm-9">
+            <div class="col-9">
                  <h4><?php echo ucfirst($author);?></h4>
               <?php 
               $bio_query="SELECT * FROM users WHERE username='$author'";
@@ -121,7 +124,10 @@ $post_data=$row['post_data'];
               $author_details=$bio_row['details'];
               ?>
           <p>
-              <?php echo $author_details;?>
+             
+              <?php
+
+               echo $author_details;?>
           </p>
         <?php }?>
 
@@ -130,13 +136,45 @@ $post_data=$row['post_data'];
 </div>
 
 <?php
+//comments and reply section!!
 $c_query="SELECT * FROM comments WHERE status='approve' and post_id=$post_id ORDER BY id DESC";
+
 $c_run=mysqli_query($con,$c_query);
-if(mysqli_num_rows($run)>0){
+if(mysqli_num_rows($c_run)>0){
 
 ?>
+<div class="comment">
+  <h3>Comments </h3>
+  <?php 
+  while($c_row=mysqli_fetch_array($c_run)){
+    $c_id=$c_row['id'];
+    $c_name=$c_row['name'];
+    $c_username=$c_row['username'];
+    $c_image=$c_row['image'];
+    $c_comment=$c_row['comment'];
+   
+
+  
+
+  ?>
+  <hr>
+  <div class="row single-comment">
+    <div class="col-2">
+       <img src="img/<?php echo $c_image;?>" alt="Profile Picture" class="rounded-circle img-thumbnail">
+    </div>
+    <div class="col-10">
+      <h4><?php echo ucfirst($c_username);?></h4>
+      <p><?php echo $c_comment;?></p>
+      
+    </div>
+    
+
+  </div>
+  <?php }?>
+</div>
       <!---kuch part delet kiya gya hai--> 
     <?php 
+
   }
 if(isset($_POST['submit'])){
 $cs_name=$_POST['name'];
@@ -159,7 +197,7 @@ $error_msg="Comment has not be submitted";
 }
 ?>
       
-  <div class="comment-box">
+  <div class="comment-box" id="comment-section">
         <div class="row">
               <div class="col-12">
                      <form action="" method="post"> 

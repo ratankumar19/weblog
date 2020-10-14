@@ -25,14 +25,11 @@ else if($session_role=='author'){
 
 
 }
-
 //agr koi url se glt id dalke kuch krna chhata hai to direct kr do post ke page pe
 //wsaa koi post id hi na hai then direct kr do post.php pe
   if(mysqli_num_rows($get_run)>0){
     //fetech the data from  db
     $get_row=mysqli_fetch_array($get_run);
-     $edit_id=$get_row['id'];
-
     $title=$get_row['title'];
     $post_data=$get_row['post_data'];
     $tags=$get_row['tags'];
@@ -74,57 +71,43 @@ header('location:posts.php');
                 if(isset($_POST['update'])){
 
                //update ka section
-                  echo $image;
 
                       $up_title=mysqli_real_escape_string($con,$_POST['title']);
                       $up_post_data=mysqli_real_escape_string($con,$_POST['post-data']);
                       $up_categories=$_POST['categories'];
                       $up_tags=$_POST['tags'];
                       $up_status=$_POST['status'];
-                      $image_name=$_POST['image-name'];
-
-                      $up_id=$_POST['id1'];
 
 
-                          $up_image=$_FILES['image']['name'];
+
+
+                         $up_image=$_FILES['image']['name'];
                           $up_image_tmp=$_FILES['image']['tmp_name'];
                           
                           if(empty($up_image)){
-                            $up_image=$image_name;
-                           // $up_image=$image;//if image is not changed then ,image from profile page is considered
-                          //echo "empty";
+                          $image=$image;//if image is not changed then ,image from profile page is considered
+                          echo "empty";
                          }
 
-?>
-
-<h1><?php echo $image;?>
-<?php
 
 
-               if(empty($up_title) or empty($up_post_data) or empty($up_tags)){
+
+
+               if(empty($up_title) or empty($up_post_data) or empty($up_tags) or empty($up_image)){
                 $error="All (*) fields are required";
                }
                else{
 
 $update_query="UPDATE posts SET title='$up_title',image='$up_image',categories='$up_categories',tags='$up_tags',post_data=
-'$up_post_data',status='$up_status' where id=$up_id";
-
-
-/*$update_query="UPDATE `posts` SET `title` = '$up_title', `image` = '$up_image', `categories` = '$up_categories', `tags` = '$up_tags', `post_data` = '$up_post_data', `status` = '$up_status' WHERE `posts`.`id` = '$edit_id'";
-*/
-/*
-$update_query="UPDATE `posts` SET `title` = '$up_title', `image` = '$up_image', `categories` = '$up_categories', `tags` = '$up_tags', `post_data` = '$up_post_data', `status` = '$up_status' WHERE `id` = '$edit_id'";
-*/
+'$up_post_data',status='$up_status' WHERE id=$edit_id";
 
 
                  if(mysqli_query($con,$update_query)){
                     $msg="Post has been Updated";
                     $path="img/$up_image";
-                     header("refresh:1;url=http://localhost/cms/admin/edit-post.php?edit=$up_id");
                    // header("location:edit-post.php?edit=$edit_id");
                         //header("refresh:1;url=edit-post.php?edit=$edit_id");
-                    
-                      
+                       header("refresh:1;url=edit-profile.php?edit=$edit_id");
                     if(!empty($up_image)){
                         if(move_uploaded_file($up_tmp_name,$path)){
                           copy($path,"../$path");
@@ -177,7 +160,7 @@ $update_query="UPDATE `posts` SET `title` = '$up_title', `image` = '$up_image', 
 
                         <div class="form-group">
                             <textarea name="post-data" id="textarea" rows="10" class="form-control">
-                               <?php if(isset($post_data)){echo $image;}?>
+                               <?php if(isset($post_data)){echo $post_data;}?>
                             </textarea>
 
                         </div>
@@ -188,7 +171,7 @@ $update_query="UPDATE `posts` SET `title` = '$up_title', `image` = '$up_image', 
                           <div class="col-sm-6">
                             <div class="form-group">
                                     <label for="file">Post Image:-*</label>
-                                    <input type="file" name="image" id="up_image">
+                                    <input type="file" name="image" id="image">
                             </div>
                           </div>
 
@@ -251,10 +234,7 @@ $update_query="UPDATE `posts` SET `title` = '$up_title', `image` = '$up_image', 
                         </div>
 
 
-                        <input type="hidden" name="image-name" value="<?php echo "$image";?>">
-                     
 
-                        <input type="hidden" name="id1" value="<?php echo $edit_id;?>">
                      
                     <input type="submit" name="update" value="Update Post" class="btn btn-primary"> 
                   </form>                  

@@ -1,14 +1,16 @@
 <?php require_once('inc/top.php');
-//session check
+//session start
 session_start();
+//session check
 if(!isset($_SESSION['username'])){
  header("Location:login.php");
 }
 $comment_tag_query="SELECT * FROM comments WHERE status ='pending'";
+//only those comments are required whose status is pending
 $category_tag_query="SELECT * FROM categories";
 $users_tag_query="SELECT * FROM users ";
 $posts_tag_query="SELECT * FROM posts ";
-$com_tag_run=mysqli_query($con,$comment_tag_query);
+$com_tag_run=mysqli_query($con,$comment_tag_query);//run query
 $cat_tag_run=mysqli_query($con,$category_tag_query);
 $user_tag_run=mysqli_query($con,$users_tag_query);
 $post_tag_run=mysqli_query($con,$posts_tag_query);
@@ -25,11 +27,11 @@ $post_rows=mysqli_num_rows($post_tag_run);
           <div class="row">
             <?php require_once('inc/sidebar.php')?>
                 <div class="col-md-9">
-                    <h1><i class="fa fa-tachometer"></i>
-                       Dashboard <small> Statistics Overview</small>
+                    <h1><i class="fa fa-tachometer animate__animated animate__backInRight"></i>
+                       <strong>Dashboard</strong> 
                     </h1>
                     <ol class="breadcrumb">
-                      <li class="active">Dashboard</li>
+                      <li class="active">Statistics Overview</li>
                     </ol>
                     <div class="row tag-boxes">
                         <div class="col-md-6 col-lg-3">
@@ -42,7 +44,7 @@ $post_rows=mysqli_num_rows($post_tag_run);
                                   <div class="col-9">
                                      <div class="text-right huge">
                                         <?php
-                                        echo $com_rows;
+                                        echo $com_rows;//print the no of comment(pending) rows
                                        ?>
                                   </div>
                                 <div class="text-right"> New Comments</div>
@@ -69,7 +71,7 @@ $post_rows=mysqli_num_rows($post_tag_run);
                             <div class="col-9">
                               <div class="text-right huge">
                                 <?php
-                                  echo $post_rows;
+                                  echo $post_rows;//print the no of post rows
                                  ?>
                               </div>
                              <div class="text-right">New Posts</div>
@@ -96,7 +98,7 @@ $post_rows=mysqli_num_rows($post_tag_run);
                       <div class="col-9">
                             <div class="text-right huge">
                                 <?php
-                                  echo $user_rows;
+                                  echo $user_rows;//print the no of users rows
                               ?>
                             </div>
                           <div class="text-right">New Users</div>
@@ -123,7 +125,7 @@ $post_rows=mysqli_num_rows($post_tag_run);
                           <div class="col-9">
                               <div class="text-right huge">
                                 <?php
-                                echo $cat_rows;
+                                echo $cat_rows;//print the no of all categories
                                 ?>
                               </div>
                             <div class="text-right">All Categories</div>
@@ -143,7 +145,7 @@ $post_rows=mysqli_num_rows($post_tag_run);
             </div>
           <hr>
         <?php
-        $get_users_query="SELECT * FROM users ORDER BY id DESC LIMIT 5";
+        $get_users_query="SELECT * FROM users ORDER BY id DESC LIMIT 5";//choose only latest 5 from user table
         $get_users_run=mysqli_query($con,$get_users_query);
         if(mysqli_num_rows($get_users_run)>0){
         ?>
@@ -160,13 +162,16 @@ $post_rows=mysqli_num_rows($post_tag_run);
             </thead>
   <tbody>
     <?php
-    while($get_users_row=mysqli_fetch_array($get_users_run)){
+    while($get_users_row=mysqli_fetch_array($get_users_run)){//fetech the result array
     $users_id=$get_users_row['id'];
     $users_date=getdate(strtotime($get_users_row['date']));
+    //which is used to convert an English textual date-time description to a UNIX timestamp
+    //1525564800 to 2018-05-06 or 15 Jun 2020
+
     $day=$users_date['mday'];
-    $month=substr($users_date['month'],0,3);
+    $month=substr($users_date['month'],0,3);//only 3 letter of month is taken
     $year=$users_date['year'];
-    //  $date=getdate(strtotime($row['date']));
+    
     $users_firstname=$get_users_row['first_name'];
     $users_lastname=$get_users_row['last_name'];
     $users_fullname="$users_firstname $users_lastname";

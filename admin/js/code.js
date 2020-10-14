@@ -1,20 +1,13 @@
-/*$(document).ready(function(){
-//alert('helo');
-$("#selectAll").click(function(){
-	$("input[type=checkbox]").prop('checked', $(this).prop('checked'));
 
-});
-		
-});*/
-
-$(document).ready(function(){
-
-$("#selectAll").click(function(){
-        $("input[type=checkbox]").prop('checked', $(this).prop('checked'));
-
-});
-
-});
-
-
+		function selectAll() {
+        var items = document.getElementsByName('checkboxes[]');
+        for (var i = 0; i < items.length; i++) {
+            if (items[i].type == 'checkbox')
+                items[i].checked = true;
+            else{
+            	 items[i].checked = false;
+            }
+        }
         
+    }
+   

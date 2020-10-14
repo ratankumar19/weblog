@@ -21,7 +21,7 @@
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
           <?php
-             //require_once('inc2/db.php');
+             //for feteching the cat value from db
             $query="SELECT * FROM categories ORDER BY id DESC";
             $run=mysqli_query($con,$query);
             if(mysqli_num_rows($run)>0)

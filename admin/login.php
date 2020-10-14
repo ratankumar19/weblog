@@ -1,29 +1,33 @@
 <?php
 //session
-ob_start();
+ob_start();//session start 
 session_start();
-require_once('../inc2/db.php');
-if(isset($_POST['submit'])){
-$username=$_POST['username'];
+require_once('../inc2/db.php');//db conncetion
+if(isset($_POST['submit'])){//if submit button is clicked
+$username=$_POST['username'];//store username in username var
 $password=$_POST['password'];
-$check_username_query="SELECT * FROM users WHERE username='$username'";
+$check_username_query="SELECT * FROM users WHERE username='$username'";//if that username exist in db 
 $check_username_run=mysqli_query($con,$check_username_query);
-if(mysqli_num_rows($check_username_run)>0){
+if(mysqli_num_rows($check_username_run)>0){//if there exist any row
 $row=mysqli_fetch_array($check_username_run);
-$db_username=$row['username'];
+//fetech the array and Returns an array that corresponds to the fetched row and moves the internal data pointer ahead.
+$db_username=$row['username'];//store username from db
 $db_password=$row['password'];
 $db_role=$row['role'];
 $db_author_image=$row['image'];
+
 //print_r($con->error);
 $password=crypt($password,$db_password);
+//crypt() will return a hashed string (using the standard Unix DES-based algorithm or alternative algorithms that may be available on the system.)
+
 if($username==$db_username && $password ==$db_password){
-$_SESSION['username']=$db_username;
+$_SESSION['username']=$db_username;//store value in session var
 $_SESSION['role']=$db_role;
 $_SESSION['author_image']=$db_author_image;
 header("Location:index.php");
 }
 else{
- $error="Wrong username 1st loop or password";
+ $error="Username does'n exist";
 }
 }else{
  $error="Wrong username or password";
@@ -79,7 +83,7 @@ else{
         <input type="password" id="inputPassword" name="password" class="form-control" placeholder="Password" required>
         <div class="checkbox">
           <label>
-            <?php
+            <?php//msg printing
             if(isset($error)){
               echo "$error";
             }

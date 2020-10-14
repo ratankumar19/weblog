@@ -3,19 +3,21 @@ session_start();
 if(!isset($_SESSION['username'])){
  header("Location:login.php");
 }
-$session_username=$_SESSION['username'];
+$session_username=$_SESSION['username'];//srore session username
 //echo $session_username;
-//$session_role= $_SESSION['role'];
+
 if(isset($_GET['del'])){
   $del_id=$_GET['del'];
 //echo $del_id;
 //sb users url se id ko pass kra ke kisi bhi post ko delete n kree....
 if($_SESSION['role']=='admin'){
+  //only admin can delete the post
   $del_check_query="SELECT * FROM posts WHERE id =$del_id";
   $del_check_run=mysqli_query($con,$del_check_query);
 }
 else if($_SESSION['role']=='author'){
   $del_check_query="SELECT * FROM posts WHERE id =$del_id and author='$session_username'";
+  //author only can delete its own post
   $del_check_run=mysqli_query($con,$del_check_query);
 }
 if(mysqli_num_rows($del_check_run)> 0){
@@ -31,14 +33,17 @@ else{
   header("Location:index.php");
   }
 }
+//converting publish to draft or draft to publish
+//only post that is publish only show at front-end page
 if(isset($_POST['checkboxes'])){
   foreach($_POST['checkboxes'] as $user_id){
     //echo $bulk_option=$_POST['bulk-options'];
-    if($bulk_option=='publish'){
+    $bulk_option=$_POST['bulk-options'];
+    if($bulk_option=='delete'){
       $bulk_del_query="DELETE FROM `posts` WHERE `posts`.`id` =$user_id";
       mysqli_query($con,$bulk_del_query);
     }
-    else if ($bulk_option=='author'){
+    else if ($bulk_option=='publish'){
       $bulk_author_query="UPDATE `posts` SET `status` = 'publish' WHERE `posts`.`id` = $user_id";
       mysqli_query($con,$bulk_author_query);
     }
@@ -57,19 +62,21 @@ if(isset($_POST['checkboxes'])){
                        <?php require_once('inc/sidebar.php');?>
                             <div class="col-md-9">
                                 <h1>
-                                    <i class="fa fa-file" aria-hidden="true"></i> Posts <small>View All Posts </small>
+                                    <i class="fa fa-file animate__animated animate__backInRight" aria-hidden="true"></i><strong> Posts</strong>
                                 </h1>
                                 <ol class="breadcrumb">
-                                    <li><a href=""><i class="fa fa-tachometer" aria-hidden="true"></i> Dashboard /</li>
-                                    <li class="active"> <i class="fa fa-file" aria-hidden="true"></i> Posts</li>
+                                    <li><a href=""> View All Posts</li>
+                                    
                                     </a>
                                 </ol>
                                <?php
                               if($_SESSION['role']=='admin'){
+                                //if user is admin then they have right to acess all post
                                 $query="SELECT * FROM posts order by id DESC";
                                 $run=mysqli_query($con,$query);
                               }
                               else if($_SESSION['role']=='author'){
+                                //if the user is author they have only right to see own post
                                 $query="SELECT * FROM posts WHERE author='$session_username' order by id DESC";
                                 $run=mysqli_query($con,$query);
                               }
@@ -79,7 +86,7 @@ if(isset($_POST['checkboxes'])){
                                   <div class="row">
                                       <div class="col-sm-8">
                                           <div class="row">
-                                              <div class="col-xs-4">
+                                              <div class="col-4">
                                                   <div class="form-group">
                                                       <select name="bulk-options" id="selectallboxes" class="form-control">
                                                           <option value="delete">Delete</option>
@@ -88,9 +95,9 @@ if(isset($_POST['checkboxes'])){
                                                       </select>
                                                   </div>
                                                </div>
-                                         <div class="col-xs-8">
+                                         <div class="col-8">
                                      <input type="submit" class="btn btn-success" value="Apply">
-                                  <a href="add-post.php" class="btn btn-primary">Add new</a>
+                                  <a href="add-post.php" class="btn btn-primary float-right">Add new</a>
                               </div>
                           </div>
                       </div>
@@ -110,7 +117,7 @@ if(isset($_POST['checkboxes'])){
                             <th >Sr #</th>
                             <th>Date</th>
                             <th>Title</th>
-                            <th>Author</th>
+                            <th>Username</th>
                             <th>Image</th>
                             <th>Categories</th>
                             <th>Views</th>
